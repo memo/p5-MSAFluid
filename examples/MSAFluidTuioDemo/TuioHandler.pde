@@ -30,6 +30,8 @@
  * ***********************************************************************/ 
 
 import TUIO.*;
+import java.util.Vector;
+
 TuioProcessing tuioClient;
 
 final static float tuioCursorSpeedMult = 0.02f; // the iphone screen is so small, easy to rack up huge velocities! need to scale down 

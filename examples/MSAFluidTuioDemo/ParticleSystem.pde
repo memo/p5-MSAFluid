@@ -34,10 +34,10 @@ import com.sun.opengl.util.*;
 
 boolean renderUsingVA = true;
 
-void fadeToColor(GL gl, float r, float g, float b, float speed) {
+void fadeToColor(GL2 gl, float r, float g, float b, float speed) {
     gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
     gl.glColor4f(r, g, b, speed);
-    gl.glBegin(GL.GL_QUADS);
+    gl.glBegin(gl.GL_QUADS);
     gl.glVertex2f(0, 0);
     gl.glVertex2f(width, 0);
     gl.glVertex2f(width, height);
@@ -66,14 +66,17 @@ class ParticleSystem {
 
 
     void updateAndDraw(){
-        PGraphicsOpenGL pgl = (PGraphicsOpenGL) g;         // processings opengl graphics object
-        GL gl = pgl.beginGL();                // JOGL's GL object
-
+        //OPENGL Processing 2.0
+        GL2 gl;
+        PGraphicsOpenGL pg = (PGraphicsOpenGL) g;         // processings opengl graphics object
+        PGL pgl = pg.beginPGL();                // JOGL's GL object
+        gl = pgl.gl.getGL().getGL2();
+        
         gl.glEnable( GL.GL_BLEND );             // enable blending
         if(!drawFluid) fadeToColor(gl, 0, 0, 0, 0.05);
 
-        gl.glBlendFunc(GL.GL_ONE, GL.GL_ONE);  // additive blending (ignore alpha)
-        gl.glEnable(GL.GL_LINE_SMOOTH);        // make points round
+        gl.glBlendFunc(gl.GL_ONE, GL.GL_ONE);  // additive blending (ignore alpha)
+        gl.glEnable(gl.GL_LINE_SMOOTH);        // make points round
         gl.glLineWidth(1);
 
 
@@ -84,16 +87,16 @@ class ParticleSystem {
                     particles[i].updateVertexArrays(i, posArray, colArray);
                 }
             }    
-            gl.glEnableClientState(GL.GL_VERTEX_ARRAY);
-            gl.glVertexPointer(2, GL.GL_FLOAT, 0, posArray);
+            gl.glEnableClientState(gl.GL_VERTEX_ARRAY);
+            gl.glVertexPointer(2, gl.GL_FLOAT, 0, posArray);
 
-            gl.glEnableClientState(GL.GL_COLOR_ARRAY);
-            gl.glColorPointer(3, GL.GL_FLOAT, 0, colArray);
+            gl.glEnableClientState(gl.GL_COLOR_ARRAY);
+            gl.glColorPointer(3, gl.GL_FLOAT, 0, colArray);
 
-            gl.glDrawArrays(GL.GL_LINES, 0, maxParticles * 2);
+            gl.glDrawArrays(gl.GL_LINES, 0, maxParticles * 2);
         } 
         else {
-            gl.glBegin(GL.GL_LINES);               // start drawing points
+            gl.glBegin(gl.GL_LINES);               // start drawing points
             for(int i=0; i<maxParticles; i++) {
                 if(particles[i].alpha > 0) {
                     particles[i].update();
@@ -104,7 +107,7 @@ class ParticleSystem {
         }
 
         gl.glDisable(GL.GL_BLEND);
-        pgl.endGL();
+        pg.endPGL();
     }
 
 
