@@ -40,9 +40,7 @@
  * ***********************************************************************/ 
 
 import msafluid.*;
-
-import processing.opengl.*;
-import javax.media.opengl.*;
+import javax.media.opengl.GL2;
 
 final float FLUID_WIDTH = 120;
 
